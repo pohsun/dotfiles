@@ -1,0 +1,69 @@
+# .bashrc
+# These configs are executed for non-login shells.
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# bash environments
+### If you want to put prompt always on top
+#prompt_on_top(){
+#  tput cup 0 0
+#  tput el
+#  tput el1
+#}
+#pre_cmd(){
+#  if [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] || [ -n "$COMP_LINE" ]; then
+#    return
+#  fi
+#  printf "\33[2J"
+#}
+#trap 'pre_cmd' DEBUG
+#PROMPT_COMMAND="prompt_on_top"
+
+PS1='\[\e[32m\][\u@\H]\[\e[m\] \[\e[4;33m\]\w\[\e[m\] $(__git_ps1 '[%s]') \n\[\e[7;31m\]\$>>\[\e[0m\] '
+PS2='\[\e[7;31m\]>\[\e[0m\] '
+
+export HISTTIMEFORMAT='%F %T'
+export HISTSIZE=10000
+export HISTFILESIZE=10000
+set -o vi
+set completion-ignore-case on
+shopt -s extglob
+shopt -s cdspell
+umask 0022 # For dir (0027 XOR 7777) = 7750, For file (0026 XOR 6666) = 6640, 0027 lead to some permission issue in macport pip
+export TERM='xterm-256color'
+
+# User specific aliases and functions
+#export LANG="C.UTF-8"
+export lxHome="${HOME}/lxHome"
+export PATH="${HOME}/local/usr/bin:${HOME}/local/bin:${HOME}/.local/bin:${PATH}"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${HOME}/local/usr/lib64:${HOME}/local/usr/lib"
+export EDITOR='vim -p'
+
+# more alias
+alias ls='ls --color=auto'
+alias la='ls -A'
+alias ll='ls -l'
+alias lt='ls -Alrt'
+alias vi='vim'
+alias vim='vim -p'
+alias ptt='ssh bbsu@ptt.cc'
+alias ptt2='ssh bbsu@ptt2.cc'
+
+# key mapping
+# ref:  http://www.gnu.org/software/bash/manual/bashref.html#Command-Line-Editing
+#       https://github.com/mgalgs/fuzzy_bash_completion
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+# ssh tunnel
+alias tunnelCERN='ssh -D 11080 -C -N pchen@lxplus.cern.ch'
+
+# Apply site specification
+source  ${HOME}/init.sh
+ 
+# others
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f ~/local/bin/bd ] && alias bd=". bd -si"
