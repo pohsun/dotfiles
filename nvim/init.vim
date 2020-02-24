@@ -1,10 +1,9 @@
 " vim: set ts=2 sw=2 ft=vim fdm=manual:
-" Last Modified   : 19 Mar 2019 12:33 22:06
 
 " Define system environment
 let s:uname = system("uname -s")
 let s:hostname = system("echo $HOSTNAME")
-let g:lxHome = $HOME.'/lxHome/scripts/setEnv/nvim/'
+let g:lxHome = $HOME.'/.config/nvim/'
 let g:vimenv = $HOME.'/.local/nvim'
 function! s:MyRCLoader(fname)
   if filereadable(g:lxHome.'rc/'.a:fname)
@@ -37,12 +36,6 @@ Plug 'szw/vim-maximizer' " This may be useful if there's no tmux
 ""Plug 'andymass/vim-matchup' " Takes too much time at startup
 "Plug 'valloric/MatchTagAlways' " Slow on lxplus
 
-  " In-buffer movement
-Plug 'easymotion/vim-easymotion'
-Plug 'kshenoy/vim-signature' " Enhanced markers
-Plug 'gcmt/wildfire.vim' " Quick selection of quoted region
-Plug 'matze/vim-move' " Maic move in Visual modes
-
 "  " Editting plugins
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular', {'on': 'Tabular'}
@@ -50,10 +43,21 @@ Plug 'triglav/vim-visual-increment'
 
 "  " Enhance searching through tags, buffer, files, file context, ets..
 "  " Most functions integrated to CoCList
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'liuchengxu/vista.vim' " Enhanced tagbar
 
-"  " AutoComplete+Snippet+Linter
+  " In-buffer movement
+Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'ripxorip/aerojump.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'kshenoy/vim-signature' " Enhanced markers
+Plug 'gcmt/wildfire.vim' " Quick selection of quoted region
+Plug 'matze/vim-move' " Maic move in Visual modes
+
+"  " DevTools
+let g:coc_node_path = $HOME.'/local/usr/bin/node'
 Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'} " Also replaces fzf with CocList
 Plug 'honza/vim-snippets'
 "if filereadable($HOME.'/local/LanguageTool/languagetool-commandline.jar')
@@ -63,15 +67,14 @@ Plug 'honza/vim-snippets'
 "endif
 "Plug 'w0rp/ale' " Linter, works fine with CoC
 
-"  " Syntax highlight, specify install path to 'syntax'
-"Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
-"Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
-"Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
+"  " ft-extensions, specify install path to 'syntax' for syntax only.
+Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
+Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
+Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
 "Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
-"Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
+"Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
 "Plug 'othree/html5.vim', {'dir': g:vimenv.'/syntax/html5.vim'}
 "Plug 'ap/vim-css-color'
-"Plug 'jelera/vim-javascript-syntax', {'dir': g:vimenv.'/syntax/vim-javascript-syntax'}
 "Plug 'StanAngeloff/php.vim', {'dir': g:vimenv.'/syntax/php.vim'}
 if s:hostname == "localhost\n" || s:uname == "Darwin\n"
   Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
@@ -138,9 +141,8 @@ endif
 set fileformat=unix
 set fileformats=unix,mac,dos
 set encoding=utf-8
-set termencoding=utf-8
 set fileencodings=ucs-bom,utf-8,euc-jp,big5,cp936,gb18030,latin1
-set fileencoding=utf-8
+set fileencoding=utf-8 " Write file with this encoding
 set spelllang=en_us
 
 " Typesettings
@@ -158,8 +160,8 @@ set listchars=tab:\|\-,conceal:+,trail:-
 set conceallevel=2
 set concealcursor=""                " Don't Hide markers
 set fdm=marker                      " syntax/text
-set foldlevel=1
-set foldnestmax=3
+set foldlevel=0
+set foldnestmax=2
 set wrap
 set linebreak
 
@@ -173,6 +175,7 @@ set cursorcolumn                    " highlight current column position
 set number
 set relativenumber
 set numberwidth=4                   " width of line-number
+set guicursor=n-v-c-sm-i-ci-ve:block,r-cr-o:hor20 " cursor-styling
 
 " " Filetype settings to be moved to after/ftplugin
 "     " c and cpp
@@ -189,11 +192,13 @@ call s:MyRCLoader("vim-mundo.vim")
 call s:MyRCLoader("colorscheme.vim")
 call s:MyRCLoader("airline.vim")
 call s:MyRCLoader("indentLine.vim")
+call s:MyRCLoader("coc.vim")                        " Load after all schemes are on.
 call s:MyRCLoader("Goyo_Limelight.vim")             " Concentrate in writing
 call s:MyRCLoader("vim-maximizer.vim")              " <leader>wz to zoom
 call s:MyRCLoader("ctrlsf.vim")                     " Enhanced grep under workspace
-" call s:MyRCLoader("sdcv.vim")                       " en-zh dictionary
+call s:MyRCLoader("incsearch.vim")                  " Incsearch x Fuzzyspell x easymotion
 call s:MyRCLoader("easymotion.vim")                 " Genious jumping method
+call s:MyRCLoader("aerojump.vim")                   " Genious jumping method for long document
 call s:MyRCLoader("vista.vim")                      " Modern tagbar
 call s:MyRCLoader("nerdcommenter.vim")
 let g:mta_filetypes = {'html' : 1, 'xhtml' : 1, 'xml' : 1} " MatchTagAlways
@@ -210,8 +215,6 @@ call s:MyRCLoader("latexPreview.vim")
     " Rearrange annoying default key-bindings
 nnoremap <F1>  <nop>
 nnoremap 0     ^
-nnoremap n     nzz
-nnoremap N     Nzz
 inoremap jj    <ESC>
 inoremap <C-w> <C-[>diwi
 nnoremap dw    diw
@@ -228,19 +231,11 @@ nnoremap gB :bp!<CR>
 function! MyAutoTemplate(fsize) "{{{
     if a:fsize <= 0 && filereadable(g:lxHome.'templates/tpl.'.&ft)
         exec 'norm gg'
-        call MyFileHeader()
         exec "0r ".g:lxHome."templates/tpl.".&ft
-        echo "Load template for filetype:" .&ft
+        echo "Load template for filetype:".&ft
     endif
 endfunction "}}}
 command! MyAutoTemplate call MyAutoTemplate(0)
-function! MyFileHeader() "{{{
-  if filereadable(g:lxHome.'templates/header')
-    exec 'r '.g:lxHome.'templates/header'
-    exec 'g/HEADERLINES$/s/HEADERLINES$//g|norm ,cl'
-  endif
-endfunction "}}}
-command! MyFileHeader call MyFileHeader()
 autocmd BufRead,BufNewFile * call MyAutoTemplate(getfsize(@%))
 function! MyRangeSearch(direction) "{{{ search in vusual range
   call inputsave()

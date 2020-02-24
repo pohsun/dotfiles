@@ -1,10 +1,15 @@
 {
+    "coc.preferences.hoverTarget": "float",
+    "lists.disabledLists": [],
     "list.source.files.defaultOptions": ["--number-select"],
+    "list.source.windows.defaultOptions": [ "--number-select"],
+    "list.source.buffers.defaultOptions": [ "--number-select", "--auto-preview"],
     "list.source.words.defaultOptions": ["--interactive", "--number-select", "--auto-preview"],
+    "list.source.grep.command": "rg",
     "list.source.grep.defaultOptions": ["--interactive", "--number-select", "--auto-preview"],
+    "list.source.grep.args": ["--smart-case"],
     "list.source.symbols.defaultOptions": ["--interactive", "--number-select", "--auto-preview"],
     "list.source.snippets.defaultOptions": ["--interactive", "--number-select", "--auto-preview"],
-    "list.source.symbols.defaultOptions": ["--interactive", "--number-select", "--auto-preview"],
     "list.normalMappings": {
         "t": "action:tabe",
         "v": "action:vsplit",
@@ -13,8 +18,8 @@
     },
     "list.insertMappings": {
         "<C-t>": "action:tabe",
-        "<C-v>": "action:split",
-        "<C-s>": "action:vsplit",
+        "<C-v>": "action:vsplit",
+        "<C-s>": "action:split",
         "<C-w>": "command:wincmd k"
     },
 
@@ -22,12 +27,17 @@
     "languageserver": {
         "clangd": {
             "command": "/usr/local/opt/llvm/bin/clangd",
+            "filetypes": ["c", "cpp", "objc", "objcpp"],
             "args": ["--background-index"],
-            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-            "filetypes": ["c", "cpp", "objc", "objcpp"]
+            "rootPatterns": [
+                "compile_flags.txt",
+                "compile_commands.json",
+                ".git/"
+            ]
         },
         "python": {
             "command": "python",
+            "filetypes": ["python"],
             "args": [
                 "-mpyls",
                 "-vv",
@@ -35,9 +45,6 @@
                 "/tmp/lsp_python.log"
             ],
             "trace.server": "verbose",
-            "filetypes": [
-                "python"
-            ],
             "settings": {
                 "pyls": {
                     "enable": true,
