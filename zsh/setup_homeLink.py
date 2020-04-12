@@ -38,6 +38,7 @@ if not os.path.exists(HOME + "/init.zsh"):
     call("ln -s ${lxHome}/scripts/setEnv/zsh/init.zsh ${HOME}/init.zsh", shell=True)
 
 call("ln -s ${lxHome}/scripts/setEnv/tmux.conf ${HOME}/.tmux.conf", shell=True)
+call("ln -s ${lxHome}/scripts/setEnv/ssh/config ${HOME}/.ssh/config", shell=True)
 
 # Vim and neovim
 # if not os.path.exists(HOME + "/.vimrc"):
@@ -53,7 +54,6 @@ if not os.path.exists(HOME + "/.config"):
     os.makedirs(HOME + "/.config")
     call("ln -s ${lxHome}/scripts/setEnv/nvim ${HOME}/.config/", shell=True)
     call("ln -s ${lxHome}/scripts/setEnv/gitconfig ${HOME}/.gitconfig", shell=True)
-
 
 # ROOT environment
 call("ln -s ${lxHome}/scripts/root/rootrc ${HOME}/.rootrc", shell=True)

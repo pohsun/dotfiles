@@ -30,15 +30,16 @@ Plug 'simnalamburt/vim-mundo' " Visualize undo tree
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox', {'dir': g:vimenv.'/colors/gruvbox'}
-Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
+" Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
 Plug 'Yggdroot/indentLine'
 Plug 'szw/vim-maximizer' " This may be useful if there's no tmux
-""Plug 'andymass/vim-matchup' " Takes too much time at startup
+"Plug 'andymass/vim-matchup' " Takes too much time at startup, try deferred highlighting?
 "Plug 'valloric/MatchTagAlways' " Slow on lxplus
 
 "  " Editting plugins
 Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular', {'on': 'Tabular'}
+" Plug 'junegunn/vim-easy-align'
 Plug 'triglav/vim-visual-increment'
 
 "  " Enhance searching through tags, buffer, files, file context, ets..
@@ -123,7 +124,7 @@ set incsearch
 set showmatch
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " Jump to last known position
 if &term =~ "xterm.*"
-  " bracketed-paste-mode for $TERM=xterm*
+  " Toggle paste automatically. Check pastemode bracketing ON in terminal
   let &t_ti = &t_ti . "\e[?2004h"
   let &t_te = "\e[?2004l" . &t_te
   function! XTermPasteBegin(ret)
@@ -202,7 +203,7 @@ call s:MyRCLoader("aerojump.vim")                   " Genious jumping method for
 call s:MyRCLoader("vista.vim")                      " Modern tagbar
 call s:MyRCLoader("nerdcommenter.vim")
 let g:mta_filetypes = {'html' : 1, 'xhtml' : 1, 'xml' : 1} " MatchTagAlways
-let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"] " wildfire
+let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "i`", "ip"] " wildfire
 " let g:surround_insert_tail = "<++>"
 call s:MyRCLoader("markdown-preview.vim")
 call s:MyRCLoader("latexPreview.vim")
@@ -224,9 +225,7 @@ command! Wq    wq
 inoremap <expr> <CR>    pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-    " move between buffers in a smarter way
-nnoremap gb :bn!<CR>
-nnoremap gB :bp!<CR>
+
     " templates, headers, and timestamps
 function! MyAutoTemplate(fsize) "{{{
     if a:fsize <= 0 && filereadable(g:lxHome.'templates/tpl.'.&ft)
@@ -237,7 +236,8 @@ function! MyAutoTemplate(fsize) "{{{
 endfunction "}}}
 command! MyAutoTemplate call MyAutoTemplate(0)
 autocmd BufRead,BufNewFile * call MyAutoTemplate(getfsize(@%))
-function! MyRangeSearch(direction) "{{{ search in vusual range
+
+function! MyRangeSearch(direction) "{{{ search in visual range
   call inputsave()
   let g:srchstr = input(a:direction)
   call inputrestore()

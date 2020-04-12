@@ -1,3 +1,14 @@
+" let &colorcolumn="80,".join(range(160,999,80),",")  " highlight i-th column
+let &colorcolumn="80"
+
+autocmd Syntax * syntax keyword myTodo TODO DEBUG containedin=ALL
+autocmd Syntax * syntax keyword myNote NOTE REMARK INFO containedin=ALL
+autocmd Syntax * syntax keyword myWarn WARNING ERROR DANGER BUG containedin=ALL
+hi! link myTodo Todo
+hi! link myNote DiffChange
+hi! link myWarn Error
+
+hi Cursor cterm=inverse,bold
 if filereadable(g:vimenv.'/colors/gruvbox/colors/gruvbox.vim')
     colo gruvbox
 elseif filereadable(g:vimenv.'/colors/jellybeans.vim/colors/jellybeans.vim')
@@ -13,19 +24,16 @@ elseif filereadable(g:vimenv.'/colors/jellybeans.vim/colors/jellybeans.vim')
     hi PmenuSel cterm=bold ctermfg=9 ctermbg=228
     hi MatchParen cterm=bold ctermfg=none ctermbg=228
     hi SpecialKey ctermfg=9
-    "let &colorcolumn="80,".join(range(160,999,80),",")  " highlight i-th column
-    let &colorcolumn="80"
     exec "hi ColorColumn cterm=standout ctermfg=56 ctermbg=".g:jellybeans_background_color_256
     exec "hi DiffChange ctermbg=1"
 else
     colo default
 endif
 
-hi Cursor cterm=standout,bold
     " Other highligh stuff
 function! MyCursorwordHighlight() abort "{{{
-    highlight CursorWord0 cterm=underline,bold
-    highlight CursorWord1 cterm=standout
+    hi CursorWord0 cterm=underline,bold
+    hi CursorWord1 cterm=standout
 endfunction "}}}
 function! MyCursorwordMatchadd() abort "{{{
     let line = getline('.')

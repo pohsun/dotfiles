@@ -1,6 +1,6 @@
 setlocal sts=4
 setlocal sw=4
-setlocal noet
+setlocal et
 setlocal foldmethod=indent
 setlocal foldlevel=0
 setlocal foldnestmax=1

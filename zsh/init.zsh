@@ -3,6 +3,7 @@
 
 export lxHome="${HOME}/lxHome"
 export EDITOR="vim"
+export NoteLib="${HOME}/MWeb"
 
 ###### Setting for local machines
 if [ `uname -s` = "Linux" ]; then
@@ -28,8 +29,10 @@ elif [ `uname -s` = "Darwin" ]; then
     #export CPPFLAGS="-I/usr/local/opt/llvm/include"
 
     ### PYTHON environment
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:${PATH}"
+    export PYENV_ROOT="${HOME}/.pyenv"
+    export SYSTEM_PYTHON3_PATH="${HOME}/Library/Python/3.7"
+    export SYSTEM_PYTHON2_PATH="${HOME}/Library/Python/2.7"
+    export PATH="${PYENV_ROOT}/bin:${SYSTEM_PYTHON3_PATH}/bin:${SYSTEM_PYTHON2_PATH}/bin:${PATH}"
     eval "$(pyenv init -)"
 
     ### GO
@@ -40,7 +43,7 @@ if hash nvim 2>/dev/null; then
     alias vim='nvim'
 fi
 
-### root environment, remark '-lRooFit -lRooFitCore' should be included by hand.
+### ROOT environment, remark '-lRooFit -lRooFitCore' should be included by hand.
 # Some problem with thisroot.sh if root binary is in some shared path like '/usr/local/bin'.
 # The procedure removing current version might hurt the $PATH, have to check /etc/paths to resotre some system-wide path.
 if [[ -f /usr/local/bin/thisroot.sh ]]; then
@@ -51,12 +54,11 @@ alias root='root -l'
 alias groot='g++ `root-config --cflags --glibs` -lRooFit -lRooFitCore'
 
 ###### Variables and alias
-alias pcTW='ssh -YC pchen@220.135.8.229'
 lxplus() {
     nodeId=$1
     case ${nodeId} in
         ("tmux")
-            ssh -YC $(tail -n 1 ~/lxplus.log) -t /afs/cern.ch/user/p/pchen/local/usr/bin/tmux a
+            ssh -YC $(tail -n 1 ~/lxplus.log) -t '/afs/cern.ch/user/p/pchen/local/usr/bin/tmux -CC a'
         ;;
         ("random")
             ssh -YC ${USER}@lxplus.cern.ch
@@ -97,6 +99,7 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 
 ###### Some useful command
 alias weather='curl http://v2.wttr.in/'
+alias ptt2='ssh bbsu@ptt2.cc'
 
 ###### remove duplicated path
 export PATH=$(echo -n ${PATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')

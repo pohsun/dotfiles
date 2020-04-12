@@ -8,7 +8,7 @@ let which_key_map = {
     \ 'c' : {'name': '+NerdCommenter'},
     \ 't' : {
         \ 'name': '+Toggle',
-        \ 'p': [':set paste! rnu! nu! | IndentLinesToggle"', "Copy/Paste"],
+        \ 'p': [':set rnu! nu! list! paste!| IndentLinesToggle"', "Copy/Paste"],
         \ 'w': [':set wrap!', "LnWrap"],
         \ 'U': [':MundoToggle', "Undo tree"],
         \ '5': [':CocCommand explorer', "File Explorer"],
@@ -16,7 +16,7 @@ let which_key_map = {
         \ },
     \ '/' : {
         \ 'name': '+Search',
-        \ '/': ['<Plug>(incsearch-fuzzyspell-stay)', "FuzzyspellWord"],
+        \ '/': ['<Plug>(incsearch-fuzzyall-stay)', "FuzzyString"],
         \ '#': [':call MyCtrlSFLocal()', "CursorWord"],
         \ 'f': [':CocList files', "File"],
         \ 'm': [':CocList mru', "MRU File"],
@@ -49,3 +49,4 @@ nnoremap <silent> <F5> :CocCommand explorer<CR>
 nnoremap <silent> <F6> :Vista coc<CR>
 nnoremap <silent> <C-P> :CocList<CR>
 
+" nnoremap <silent> <ESC><ESC> :nohl<CR>
