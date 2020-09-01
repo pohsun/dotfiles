@@ -30,13 +30,16 @@ elif [ `uname -s` = "Darwin" ]; then
 
     ### PYTHON environment
     export PYENV_ROOT="${HOME}/.pyenv"
-    export SYSTEM_PYTHON3_PATH="${HOME}/Library/Python/3.7"
     export SYSTEM_PYTHON2_PATH="${HOME}/Library/Python/2.7"
+    export SYSTEM_PYTHON3_PATH="${HOME}/Library/Python/3.8"
     export PATH="${PYENV_ROOT}/bin:${SYSTEM_PYTHON3_PATH}/bin:${SYSTEM_PYTHON2_PATH}/bin:${PATH}"
     eval "$(pyenv init -)"
 
     ### GO
     export GOPATH='/usr/local/go/bin'
+
+    ### Ruby
+    export PATH="${HOME}/.gem/ruby/2.6.0/bin:${PATH}"
 fi
 export PATH="${HOME}/local/bin:${HOME}/.local/bin:${PATH}"
 if hash nvim 2>/dev/null; then
@@ -46,10 +49,12 @@ fi
 ### ROOT environment, remark '-lRooFit -lRooFitCore' should be included by hand.
 # Some problem with thisroot.sh if root binary is in some shared path like '/usr/local/bin'.
 # The procedure removing current version might hurt the $PATH, have to check /etc/paths to resotre some system-wide path.
-if [[ -f /usr/local/bin/thisroot.sh ]]; then
-    [[ ! -z $TMUX ]] && unset ROOTSYS
-    pushd /usr/local >/dev/null; . bin/thisroot.sh; popd >/dev/null
-fi
+
+# As of ROOT 6.22, you should not need the thisroot scripts;
+# if [[ -f /usr/local/bin/thisroot.sh ]]; then
+#     [[ ! -z $TMUX ]] && unset ROOTSYS
+#     pushd /usr/local >/dev/null; . bin/thisroot.sh; popd >/dev/null
+# fi
 alias root='root -l'
 alias groot='g++ `root-config --cflags --glibs` -lRooFit -lRooFitCore'
 
