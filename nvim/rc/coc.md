@@ -37,6 +37,8 @@ coc-texlab
 coc-json
 ```
 
+It's easier to build all needed stuff using an [automation script](https://github.com/neoclide/coc.nvim/wiki/Install-coc.nvim#automation-script).
+
 # LSP configuration
 
 More example setup on [wiki](https://github.com/neoclide/coc.nvim/wiki/Language-servers)

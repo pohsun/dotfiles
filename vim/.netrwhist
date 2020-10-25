@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/'
+let g:netrw_dirhist_2='/Users/pchen/work/BuToKstarMuMu/v2Fitter/SingleBuToKstarMuMuFitter/data'
+let g:netrw_dirhist_3='/Users/pchen/work/BuToKstarMuMu/v2Fitter/tmp/wspace_ANv18_FitR4p76To5p80'
+let g:netrw_dirhist_4='/private/var/folders/p9/tfnwczds3rs7mmqgn7k32f2w0000gn/T/cargo-installSP9TKu'
+let g:netrw_dirhist_5='/Users/pchen/Dropbox/lxHome/tex/thesis_phd'
+let g:netrw_dirhist_6='/Users/pchen/Dropbox/lxHome/scripts/setEnv/nvim/SpaceVim.d/autoload'

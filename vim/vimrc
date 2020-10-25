@@ -1,0 +1,335 @@
+" vim: set ft=vim fdm=manual:
+" Last Modified   : 19 Mar 2019 12:33 22:06
+
+" Update
+" wget -O ~/lxHome/scripts/setEnv/vimrc https://www.dropbox.com/s/fpu3oqzvi8x1mkq/vimrc?dl=0
+" See :help option
+"     :set all
+"     /usr/share/vim/vimXX/vimrc_example.vim
+"     https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/README.md
+
+" Define system environment
+let s:uname = system("uname -s")
+let s:hostname = system("echo $HOSTNAME")
+let g:lxHome = $HOME.'/lxHome/scripts/setEnv/vim/'
+let g:vimenv = $HOME.'/local/.vim'
+function! s:MyRCLoader(fname)
+    exec 'source '.g:lxHome.'rc/'.a:fname
+endfunction
+
+" Basic vim settings and initialize plugin-manager
+" Install/Update plugins by :PluginInstall :PluginUpdate
+if !filereadable($HOME.'/.vim/autoload/plug.vim')
+    echo "Installing vim-plug...\n"
+    silent !mkdir -p ~/.vim/autoload
+    silent !wget --no-check-certificate -O ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+set nocompatible
+filetype off
+call plug#begin(g:vimenv.'/bundle')
+    " The lookings, get powerline-fonts from yum/apt.
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
+Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'szw/vim-maximizer' " This may be useful if there's no tmux
+Plug 'chrisbra/changesPlugin', {'on': ['EnableChanges','EC']}
+Plug 'valloric/MatchTagAlways' " Slow on lxplus
+"Plug 'andymass/vim-matchup'
+    " In-buffer movement
+Plug 'easymotion/vim-easymotion'
+Plug 'kshenoy/vim-signature' " Enhanced markers
+Plug 'gcmt/wildfire.vim' " Quick selection of quoted region
+Plug 'osyo-manga/vim-hopping' " Better way to jump within search matches
+    " Editting plugins
+Plug 'scrooloose/nerdcommenter'
+Plug 'godlygeek/tabular', {'on': 'Tabular'}
+Plug 'triglav/vim-visual-increment'
+    " Enhance searching through tags, buffer, files, file context, ets..
+Plug 'vim-scripts/LargeFile'
+if executable('go')
+    Plug 'tweekmonster/fzf-filemru'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+endif
+if executable('rg') || executable('ag') || executable('ack')
+    Plug 'dyng/ctrlsf.vim' " ack/ag/rg is necessary
+endif
+    " Tags extension, to be integrated into FZF?
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
+"if v:version >= 800
+"    Plug 'ludovicchabant/vim-gutentags'
+"    Plug 'skywind3000/gutentags_plus'
+"endif
+    " AutoComplete+Snippet+Linter
+if filereadable(g:vimenv.'/bundle/deoplete.nvim/README.md')
+    " Slow....to be replaced with ncm2
+    let g:loaded_completer='deo'
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+    Plug 'roxma/nvim-yarp'
+    Plug 'roxma/vim-hug-neovim-rpc'
+
+    Plug 'Shougo/neosnippet.vim'
+    Plug 'Shougo/neosnippet-snippets'
+
+    Plug 'Shougo/neoinclude.vim'
+    "Plug 'Shougo/deoplete-clangx'
+    Plug 'justmao945/vim-clang'
+    Plug 'zchee/deoplete-jedi'
+elseif filereadable(g:vimenv.'/bundle/YouCompleteMeOblitum/README.md')
+    let g:loaded_completer='ycm'
+    Plug 'https://github.com/oblitum/YouCompleteMe', { 'do': g:vimenv.'/bundle/YouCompleteMe/install.py --clang-completer', 'dir': g:vimenv.'/bundle/YouCompleteMeOblitum', 'frozen': 1}
+    Plug 'SirVer/ultisnips' " Need py27
+elseif filereadable(g:vimenv.'/bundle/YouCompleteMe/README.md')
+    let g:loaded_completer='ycm'
+    Plug 'https://github.com/Valloric/YouCompleteMe', { 'do': g:vimenv.'/bundle/YouCompleteMe/install.py --clang-completer', 'dir': g:vimenv.'/bundle/YouCompleteMe', 'frozen': 1}
+    Plug 'SirVer/ultisnips'
+else
+    let g:loaded_completer='acp'
+    Plug 'vim-scripts/L9'
+    Plug 'othree/vim-autocomplpop'
+    Plug 'ervandew/supertab'
+
+    Plug 'MarcWeber/vim-addon-mw-utils'
+    Plug 'tomtom/tlib_vim'
+    Plug 'garbas/vim-snipmate'
+endif
+Plug 'honza/vim-snippets'
+if filereadable($HOME.'/local/LanguageTool/languagetool-commandline.jar')
+    let g:languagetool_jar='$HOME/local/LanguageTool/languagetool-commandline.jar'
+    " Another powerful version in https://github.com/rhysd/vim-grammarous
+    Plug 'dpelle/vim-LanguageTool', {'for': ['html', 'md', 'rst', 'tex']}
+endif
+if v:version >= 800
+    Plug 'w0rp/ale' " Replace syntastic
+endif
+    " Syntax highlight, specify install path to 'syntax'
+Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
+Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
+Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
+"Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
+Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
+Plug 'othree/html5.vim', {'dir': g:vimenv.'/syntax/html5.vim'}
+"Plug 'ap/vim-css-color'
+Plug 'jelera/vim-javascript-syntax', {'dir': g:vimenv.'/syntax/vim-javascript-syntax'}
+Plug 'StanAngeloff/php.vim', {'dir': g:vimenv.'/syntax/php.vim'}
+Plug 'vim-pandoc/vim-pandoc'
+Plug 'vim-pandoc/vim-pandoc-syntax', {'dir': g:vimenv.'/syntax/vim-pandoc-syntax'}
+if s:hostname == "localhost\n" || s:uname == "Darwin\n"
+    Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+    Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+    Plug 'iamcco/mathjax-support-for-mkdp', {'for': ['pandoc', 'markdown']}
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()} }
+    Plug 'aklt/plantuml-syntax', {'dir': g:vimenv.'/syntax/plantuml-syntax'}
+    Plug 'xuhdev/vim-latex-live-preview', {'for': ['tex']}
+    Plug 'tpope/vim-surround', {'for': ['html', 'xhtml', 'xml']}
+    "Plug 'flazz/vim-colorschemes', {'dir': g:vimenv.'/colors/vim-colorschemes'}
+    Plug 'chusiang/vim-sdcv'
+endif
+call plug#end()
+filetype plugin indent on
+
+" Vim settings
+let g:LargeFile = 20
+set modeline
+set modelines=5                     " OSX set default value to 0
+set history=50                      " keep N lines of command line history
+set viminfo='20,\"50,:20,%          " read/write a .viminfo file.
+set ttyfast
+set visualbell
+set showcmd
+if has('mouse')
+    set mouse=""
+    nmap <LeftMouse> <nop>
+endif   " Allow mouse in normal mode only.
+set wildmenu
+set wildmode=longest,list
+set wildignore+=*.o,*.a,*.so,*.obj,*.exe,*.lib
+set wildignore+=*.pyc
+set wildignore+=*.png,*.jpg,*.gif,*.pdf
+"set wildignore+=*.root
+set completeopt=menuone,longest
+set complete=.,b,t,i,k " see :h cpt
+set laststatus=2
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set ignorecase
+set smartcase
+set incsearch
+set showmatch
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " Jump to last known position
+if &term =~ "xterm.*"
+    " bracketed-paste-mode for $TERM=xterm*
+    let &t_ti = &t_ti . "\e[?2004h"
+    let &t_te = "\e[?2004l" . &t_te
+    function! XTermPasteBegin(ret)
+        set pastetoggle=<Esc>[201~
+        set paste
+        return a:ret
+    endfunction
+    map <expr> <Esc>[200~ XTermPasteBegin("i")
+    imap <expr> <Esc>[200~ XTermPasteBegin("")
+    cmap <Esc>[200~ <nop>
+    cmap <Esc>[201~ <nop>
+endif
+
+" Encoding
+set fileformat=unix
+set fileformats=unix,mac,dos
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=ucs-bom,utf-8,euc-jp,big5,cp936,gb18030,latin1
+set fileencoding=utf-8
+set spelllang=en_us
+
+" Typesettings
+set autoindent
+set t_kb=
+set backspace=indent,eol,start      " allow backspacing over everything in insert mode
+set whichwrap=b,s                   " set whichwrap=b,s,<,>,[,]
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set scrolloff=15
+set expandtab                       " replace all tab with space
+set list
+set listchars=tab:\|\-,conceal:+,trail:-
+set conceallevel=2
+set concealcursor=""                " Don't Hide markers
+set fdm=marker                      " syntax/text
+set foldlevel=1
+set foldnestmax=5
+set wrap
+set linebreak
+
+
+" ColorScheme setting, check schemes by :colo <TAB>
+" Check current highlight by :highlight
+syntax on
+set t_Co=256
+set hls                             " highlight search result
+set ruler                           " show the cursor position all the time
+"set cursorline                      " add an underline under the cursor
+set cursorcolumn                    " highlight current column position
+set relativenumber
+set numberwidth=4                   " width of line-number
+call s:MyRCLoader("colorscheme.vim")
+call s:MyRCLoader("easyPlaceHolder.vim")
+
+" Filetype settings
+autocmd Filetype make       setlocal noet
+    " c and cpp
+let g:cpp_class_scope_highlight = 1
+    " python with pyton-syntax
+let python_highlight_all=1
+let b:python_version_2=1
+    " latex
+let g:tex_flavor = "latex"
+let g:tex_conceal="" " abdmgs
+let g:tex_fast="bcmMprsSvV" "bcmMprsSvV
+let g:tex_no_error = 1
+
+    " Quick compile settings, run compile by :make or <F9> in normal mode
+autocmd Filetype tex nnoremap <buffer> <silent> <nowait> <F9> :LLPStartPreview<CR>
+nnoremap <unique> <buffer> <silent> <F9> :make!<CR>
+if !filereadable(expand("%:p:h")."/Makefile")
+    autocmd Filetype c,cpp      setlocal makeprg=g++\ -Werror\ -o\ %<\ %\ &&\ ./%:r
+endif
+
+" Plugin settings
+let mapleader=","
+call s:MyRCLoader("airline.vim")
+call s:MyRCLoader("Goyo_Limelight.vim")             " Concentrate in writing
+call s:MyRCLoader("maximizer.vim")                  " <C-w>z to zoom
+call s:MyRCLoader("nerdtree_ctrlp.vim")             " In case there's no fzf
+call s:MyRCLoader("fzf.vim")                        " Fuzzle file search
+call s:MyRCLoader("sdcv.vim")                       " en-zh dictionary
+call s:MyRCLoader("easymotion.vim")                 " Genious jumping method
+call s:MyRCLoader("CtrlSF.vim")                     " Project-wide string search
+call s:MyRCLoader("tagbar.vim")                     " Detect a list of c-tags
+call s:MyRCLoader("hopping.vim")                    " Enhenced in-file search
+call s:MyRCLoader("syntastic.vim")                  " syntastic - in case there's no ale
+call s:MyRCLoader("ale.vim")                        " Async syntax checker
+call s:MyRCLoader("autocomplete.vim")               " YCM or neoplete or acp +snippets
+call s:MyRCLoader("clang.vim")                      " vim-clang setup
+
+    " MatchTagAlways + Rainbow + indentLine
+let g:mta_filetypes = {'html' : 1, 'xhtml' : 1, 'xml' : 1}
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+autocmd BufReadPost * RainbowParentheses
+let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
+let g:indentLine_setColors = 0
+let g:indentLine_setConceal= 0
+
+    " vim-surround
+let g:surround_insert_tail = "<++>"
+
+    " markdown - pandoc+markdown-preview+rst
+call s:MyRCLoader("markdown.vim")
+call s:MyRCLoader("rst.vim")
+call s:MyRCLoader("latexPreview.vim")
+
+" OS specified settings, see ':h feature-list'
+if s:uname == "Darwin\n"
+    let g:instant_rst_browser = 'open -a "Google Chrome"'
+endif
+
+" Other functions/keymappings, rule: Start with 'My', <leader>
+let mapleader=","
+    " Rearrange annoying default key-bindings
+nnoremap    <F1>        <nop>
+nnoremap    0           ^
+nnoremap    n           nzz
+nnoremap    N           Nzz
+inoremap    jj          <ESC>
+inoremap    <C-w>       <C-[>diwi
+nnoremap    dw          diw
+command!    W           w
+command!    Q           q
+command!    Wq          wq
+inoremap <expr> <CR>    pumvisible() ? "\<C-Y>" : "\<CR>"
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    " Quick syntax check and compile, close QuickFix window
+nnoremap <F6> :TagbarToggle<CR>
+    " Expand/close folds by space
+nnoremap <Space> za
+    " move between buffers in a smarter way
+nnoremap gb :bn!<CR>
+nnoremap gB :bp!<CR>
+    " Easy-Commenter ,<C-B> back to home, <C-E> jump to end.
+call s:MyRCLoader("nerdcommenter.vim")
+    " templates, headers, and timestamps
+function! MyAutoTemplate(fsize) "{{{
+    if a:fsize <= 0 && filereadable(g:lxHome.'templates/tpl.'.&ft)
+        exec 'norm gg'
+        call MyFileHeader()
+        exec "0r ".g:lxHome."templates/tpl.".&ft
+        echo "Load template for filetype:" .&ft
+    endif
+endfunction "}}}
+command! MyAutoTemplate call MyAutoTemplate(0)
+function! MyFileHeader() "{{{
+    if filereadable(g:lxHome.'templates/header')
+        exec 'r '.g:lxHome.'templates/header'
+        exec 'g/HEADERLINES$/s/HEADERLINES$//g|norm ,cl'
+    endif
+endfunction "}}}
+command! MyFileHeader call MyFileHeader()
+autocmd BufRead,BufNewFile * call MyAutoTemplate(getfsize(@%))
+function! MyRangeSearch(direction) "{{{ search in vusual range
+  call inputsave()
+  let g:srchstr = input(a:direction)
+  call inputrestore()
+  if strlen(g:srchstr) > 0
+    let g:srchstr = g:srchstr.'\%>'.(line("'<")-1).'l'.'\%<'.(line("'>")+1).'l'
+  else
+    let g:srchstr = ''
+  endif
+ endfunction "}}}
+vnoremap <silent> / :<C-U>call MyRangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+vnoremap <silent> ? :<C-U>call MyRangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
+    " Quick exit
+nnoremap <leader>xa :conf xa<CR>
+    " Turn on/off certering cursorline
+nnoremap <Leader>zz :Goyo<CR>
+

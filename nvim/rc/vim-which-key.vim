@@ -27,7 +27,10 @@ let which_key_map = {
         \ 'G': ['<Plug>CtrlSFPrompt', "CtrlSF"],
         \ 'C': [':CocList', "CoCList"],
         \ },
-    \ 'l' : {'name': '+FileType-specified'},
+    \ 'l' : {
+        \ 'name': '+FileType-specified',
+        \ 'F': ['<Plug>(coc-format-selected)', "FormatSelected"],
+        \ },
     \ 'j' : {
         \ 'name': '+Easymotion',
         \ 'f' : [ '<Plug>(AerojumpBolt)', "Fuzzy"],

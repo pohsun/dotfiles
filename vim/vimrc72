@@ -1,0 +1,481 @@
+" vim: set ft=vim fdm=manual:
+" Last Modified   : 11 Aug 2016 04:05 22:06
+
+" This reduced vimrc is designed for rookies on vim72.
+" For the first time start vim, the plug manager is downloaded automatically.
+" Please restart vim and type ':PluginInstall', then all plugins are installed.
+" Have fun with the friendly environment.
+" Hope you all like this!
+
+" Update original full version on vim74
+" wget -O ~/lxHome/scripts/setEnv/vimrc https://www.dropbox.com/s/59q9k1oza6bwqkl/vimrc?dl=0
+" See :help option
+"     :set all
+"     /usr/share/vim/vim74/vimrc_example.vim
+"     https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/README.md
+
+" Define system environment
+let s:uname = system("uname -s")
+let s:hostname = system("echo $HOSTNAME")
+let g:vimenv = $HOME.'/local/.vim'
+
+" Basic vim settings and initialize plugin-manager
+" Install/Update plugins by :PluginInstall :PluginUpdate
+if !filereadable($HOME.'/.vim/autoload/plug.vim')
+    echo "Make sure you have 'git', 'wget' commands and '~/local/.vim' directory.\n"
+    echo "Installing vim-plug...\n"
+    silent !mkdir -p ~/.vim/autoload
+    silent !wget --no-check-certificate -O ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+endif
+set nocompatible
+filetype off
+call plug#begin(g:vimenv.'/bundle')
+    " The lookings, get powerline-fonts from yum/apt.
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
+Plug 'junegunn/rainbow_parentheses.vim'
+    " Better way to browse files
+Plug 'vim-scripts/LargeFile'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+if executable('go')
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+else
+    Plug 'ctrlpvim/ctrlp.vim'
+endif
+if executable('ag') || executable('ack')
+    Plug 'dyng/ctrlsf.vim' " ack/ag is necessary
+endif
+    " Better way to jump within text, scanning large file takes time, need
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
+    " AutoComplete
+let s:loaded_youcompleteme=1
+if s:loaded_youcompleteme==1 && v:version >= 704 && filereadable(g:vimenv.'/bundle/YouCompleteMeOblitum/README.md')
+    Plug 'https://github.com/oblitum/YouCompleteMe', { 'do': g:vimenv.'/bundle/YouCompleteMe/install.sh', 'dir': g:vimenv.'/bundle/YouCompleteMeOblitum', 'frozen': 1}
+    Plug 'SirVer/ultisnips'                                                                                                                                         
+else
+    let s:loaded_youcompleteme=0
+    Plug 'vim-scripts/L9'
+    Plug 'othree/vim-autocomplpop'
+    Plug 'ervandew/supertab'
+
+    Plug 'MarcWeber/vim-addon-mw-utils'
+    Plug 'tomtom/tlib_vim'
+    Plug 'garbas/vim-snipmate'
+endif
+Plug 'honza/vim-snippets'
+    " Editting plugins
+Plug 'scrooloose/nerdcommenter'
+Plug 'godlygeek/tabular', {'on': 'Tabular'}
+Plug 'triglav/vim-visual-increment'
+    " Syntax check/highlight
+Plug 'scrooloose/syntastic' ", {'on': 'SyntasticCheck'}
+Plug 'valloric/MatchTagAlways'
+Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
+Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
+Plug 'hdima/python-syntax', {'dir': g:vimenv.'/syntax/python-syntax'}
+Plug 'tpope/vim-markdown', {'dir': g:vimenv.'syntax/vim-markdown'}
+Plug 'jtratner/vim-flavored-markdown', {'dir': g:vimenv.'syntax/vim-flavored-markdown'}
+Plug 'Rykka/riv.vim'
+call plug#end()
+filetype plugin indent on
+
+" Vim settings
+let g:LargeFile = 20
+set modeline
+set modelines=5                     " OSX set default value to 0
+set history=50                      " keep N lines of command line history
+set viminfo='20,\"50,:20,%          " read/write a .viminfo file.
+set ttyfast
+set visualbell
+set showcmd
+if has('mouse')
+    set mouse=""
+    nmap <LeftMouse> <nop>
+endif   " Allow mouse in normal mode only.
+set wildmenu
+set wildmode=longest,list
+set wildignore+=*.o,*.a,*.so,*.obj,*.exe,*.lib,*.pyc
+set wildignore+=*.png,*.jpg,*.gif,*.pdf
+"set wildignore+=*.root
+set completeopt=menuone,longest
+set complete=.,b,t,i " see :h cpt
+"autocmd FileType python          setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType javascript      setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType css             setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown   setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType xml             setlocal omnifunc=xmlcomplete#CompleteTags
+set laststatus=2
+set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
+set ignorecase
+set smartcase
+set incsearch
+set showmatch
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif " Jump to last known position
+if &term =~ "xterm.*"
+    " bracketed-paste-mode for $TERM=xterm*
+    let &t_ti = &t_ti . "\e[?2004h"
+    let &t_te = "\e[?2004l" . &t_te
+    function! XTermPasteBegin(ret)
+        set pastetoggle=<Esc>[201~
+        set paste
+        return a:ret
+    endfunction
+    map <expr> <Esc>[200~ XTermPasteBegin("i")
+    imap <expr> <Esc>[200~ XTermPasteBegin("")
+    cmap <Esc>[200~ <nop>
+    cmap <Esc>[201~ <nop>
+endif
+
+" Encoding
+set fileformat=unix
+set fileformats=unix,mac,dos
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=ucs-bom,utf-8,euc-jp,big5,cp936,gb18030,latin1
+set fileencoding=utf-8
+set spelllang=en_us
+
+" Typesettings
+set autoindent
+set t_kb=
+set backspace=indent,eol,start      " allow backspacing over everything in insert mode
+set whichwrap=b,s                   " set whichwrap=b,s,<,>,[,]
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set scrolloff=15
+set expandtab                       " replace all tab with space
+"set list
+"set listchars=tab:\|\-,conceal:\ ,trail:-
+set fdm=marker                      " syntax/text
+"set foldlevel=1
+"set wrap
+set linebreak
+let s:easyPlaceHolder = 1
+if s:easyPlaceHolder==1
+    " This <++> is called 'placeholder', it helps you avoid from missing
+    " paired objects, you could use <C-L> to jump to the position of the
+    " next placeholder.
+    inoremap () ()<++><ESC>F)i
+    inoremap [] []<++><ESC>F]i
+    inoremap {} {}<++><ESC>F}i
+    inoremap '' ''<++><ESC>F'i
+    inoremap "" ""<++><ESC>F"i
+    inoremap $$ $$<++><ESC>F$i
+    inoremap <> <><++><ESC>F<F<a
+    inoremap <C-L> <ESC>/<++><CR>cf><ESC>:nohls<CR>a
+endif
+
+" ColorScheme setting, check schemes by :colo <TAB>
+" Check current highlight by :highlight
+syntax on
+set t_Co=256
+set hls                             " highlight search result
+set ruler                           " show the cursor position all the time
+set cursorline                      " add an underline under the cursor
+set cursorcolumn                    " highlight current column position
+set number
+set numberwidth=4                   " width of line-number
+if filereadable(g:vimenv.'/colors/jellybeans.vim/colors/jellybeans.vim')
+    let g:jellybeans_background_color_256="none"
+    colo jellybeans
+    hi Search cterm=bold,standout
+    hi Comment ctermfg=245
+    hi Error cterm=bold ctermbg=9 ctermfg=228
+    exec "hi Folded ctermbg=".g:jellybeans_background_color_256
+    exec "hi CursorLine cterm=underline ctermbg=".g:jellybeans_background_color_256
+    hi CursorColumn ctermbg=52
+    hi PmenuSel cterm=bold ctermfg=9 ctermbg=228
+    hi MatchParen cterm=bold ctermfg=none ctermbg=228
+    hi SpecialKey ctermfg=9
+else
+    colo default
+endif
+hi Cursor cterm=standout,bold
+    " Other highligh stuff
+function! MyCursorwordHighlight() abort "{{{
+  highlight CursorWord0 cterm=underline,bold
+  highlight CursorWord1 cterm=standout
+endfunction "}}}
+function! MyCursorwordMatchadd() abort "{{{
+  let line = getline('.')
+  let word0 = matchstr(line[:(col('.')-1)], '\k*$')[:-2] . matchstr(line[(col('.')-1):], '^\k*')
+  let word1 = word0
+  if mode() == 'i' && line[col('.')-2] != ' ' " Inserting mode
+      let word1 = matchstr(line[:(col('.')-2)], '\k*$')[:-2] . matchstr(line[(col('.')-2):], '^\k*') " Includes inserting word
+  endif
+  silent! call matchdelete(w:cursorword_id0)
+  silent! call matchdelete(w:cursorword_id1)
+  let pattern0 = '\<' . escape(word0, '~"\.^$[]*') . '\>'
+  let pattern1 = '\<' . escape(word1, '~"\.^$[]*') . '\>'
+  let w:cursorword_id0 = matchadd('CursorWord0','\%>'.(line('w0')).'l'.'\%<'.(line('w$')).'l'. pattern0, -1)
+  let w:cursorword_id1 = matchadd('CursorWord1','\%'.line('.').'l'.pattern1,-1)
+endfunction "}}}
+autocmd VimEnter,ColorScheme * call MyCursorwordHighlight()
+autocmd CursorMoved,CursorMovedI * call MyCursorwordMatchadd()
+function! MyPlaceholderHighlight() abort "{{{
+  highlight abridgePlaceholder ctermfg=9 ctermbg=228
+endfunction "}}}
+function! MyPlaceholderMatchadd() abort "{{{
+  silent! call matchdelete(w:placeholder)
+  let w:placeholder = matchadd('abridgePlaceholder','\%>'.(line('w0')).'l'.'\%<'.(line('w$')).'l'.'<++>', -1)
+endfunction "}}}
+autocmd VimEnter,ColorScheme * call MyPlaceholderHighlight()
+autocmd CursorMoved,CursorMovedI * call MyPlaceholderMatchadd()
+
+" Filetype settings
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+    " c and cpp settings
+let g:cpp_class_scope_highlight = 1
+    " python settings
+let python_highlight_all=1
+let b:python_version_2=1
+    " latex settings
+let g:tex_flavor = "latex"
+let g:tex_conceal="bdmg" " abdmgs
+let g:tex_fast="bcmMprsSvV" "bcmMprsSvV
+let g:tex_no_error = 1
+autocmd Filetype make       setlocal noet
+autocmd Filetype c,cpp      setlocal equalprg=indent\ -kr\ -l120\ -cli4\ -nut\ -bbo
+autocmd Filetype tex        setlocal spell|setlocal conceallevel=0
+autocmd Filetype rst        setlocal fdl=3
+
+    " Quick compile settings, run compile by :make or <F9> in normal mode
+nnoremap <F9> <ESC>:make!<CR>
+if !filereadable(expand("%:p:h")."/Makefile")
+    autocmd Filetype c,cpp      setlocal makeprg=g++\ -Werror\ -o\ %<\ %\ &&\ ./%:r
+endif
+
+" Plugin settings
+let mapleader=","
+    " Airline"{{{
+let g:airline_section_warning = ''
+let g:airline_section_b = ''
+let g:airline_theme='wombat'
+if !exists('g:airline_symbols')
+   let g:airline_symbols = {}
+endif
+let g:airline_powerline_fonts = 0
+let g:airline_left_sep = '>'
+let g:airline_left_alt_sep = '«'
+let g:airline_right_sep = '<'
+let g:airline_left_alt_sep = '»'
+let g:airline_symbols.linenr = 'Ln'
+let g:airline_symbols.branch = 'Br'
+let g:airline_symbols.paste = 'Paste'
+let g:airline_symbols.readonly = '[RO]'
+let g:airline_symbols.whitespace = ' '
+let g:airline#extensions#tabline#left_sep = '>'
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#buffer_nr_fnamemod = ':p:.'
+        " enable tabline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_close_button = 0
+        " extensions
+let g:airline#extensions#tagbar#enabled = 0
+"}}}
+
+    " CtrlP+Tagbar "{{{
+let g:NERDTreeShowBookmarks=1
+let g:NERDTreeChDirMode=2 " let ctrlP perform search under selected path
+nnoremap <silent> <F5> : NERDTreeTabsToggle<CR>
+let g:ctrlp_working_path_mode = 'c'
+let g:ctrlp_open_new_file = 't'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|pyc)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_max_depth = 10
+let g:ctrlp_max_files = 1000
+let g:ctrlp_user_command = 'find %s -type f'
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor\ --hidden
+    let g:ctrlp_user_command = 'ag %s -l --nocolor --nogroup --hidden -i -g ""'
+elseif executable('ack')
+    set grepprg=ack\ --nogroup\ --nocolor\ --smart-case\ -H
+endif
+"let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+let g:ctrlp_lazy_update = 350
+let tagbar_width=50
+let g:tagbar_compact=1
+"}}}
+
+    " FZF "{{{
+nnoremap <C-P> :FZF<CR>
+command! FZFMru call fzf#run(fzf#wrap({'source': v:oldfiles }))
+nnoremap <C-P><C-P> :FZFMru<CR>
+"}}}
+
+    " CtrlSF "{{{
+if filereadable(g:vimenv.'/bundle/ctrlsf.vim/README.md')
+    function! MyCtrlSFLocal() "{{{
+        let cmd = ":CtrlSF -filematch " . expand('%:t') . " " . expand('<cword>')
+        exec cmd
+    endfunction "}}}
+    nnoremap ?? :call MyCtrlSFLocal()<CR>
+    nnoremap // :CtrlSF 
+endif
+let g:ctrlsf_regex_pattern = 1
+let g:ctrlsf_winsize = '70%'
+let g:ctrlsf_case_sensitive = 'smart'
+let g:ctrlsf_context = '-C 2'
+" }}}
+
+    "  Autocomplete "{{{
+inoremap <expr> <CR> pumvisible() ? "\<C-Y>" : "\<CR>"
+if s:loaded_youcompleteme==1
+    " NOTE: Add correct include path, which can be retrieved by 'echo | clang -v -E -x c++ -', to conf.
+    let g:ycm_min_num_of_chars_for_completion = 2
+    let g:ycm_register_as_syntastic_checker = 0 " Set to 0 to use syntastics.
+    let g:ycm_show_diagnostics_ui = 1
+    let g:ycm_always_populate_location_list = 1
+    let g:ycm_key_invoke_completion = ''
+    "let g:ycm_global_ycm_extra_conf = $HOME.'/local/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+    let g:ycm_global_ycm_extra_conf = $HOME.'/lxHome/scripts/setEnv/vim/ycm_extra_conf.py'
+    let g:ycm_collect_identifiers_from_tags_files=1
+    let g:ycm_confirm_extra_conf = 0
+    let g:ycm_key_list_select_completion = ['<Down>', '<TAB>']
+    let g:ycm_key_list_previous_completion = ['<Up>', '<S-TAB>']
+    let g:ycm_add_preview_to_completeopt = 1
+    let g:ycm_autoclose_preview_window_after_completion = 0
+    let g:ycm_autoclose_preview_window_after_insertion = 0
+    let g:ycm_filetype_blacklist = {
+        \ 'tagbar' : 1,
+        \ 'qf' : 1,
+        \ 'markdown' : 1,
+        \ 'notes' : 1,
+        \ 'unite' : 1,
+        \ 'text' : 1,
+        \ 'vimwiki' : 1,
+        \ 'infolog' : 1,
+        \ 'mail' : 1
+        \}
+    let g:ycm_goto_buffer_command = 'horizontal-split'
+    if !exists('g:ycm_semantic_triggers')
+        let g:ycm_semantic_triggers = {}
+    endif
+    let g:ycm_semantic_triggers.tex = ['re!\\[A-Za-z]*(ref|cite)[A-Za-z]*([^]]*])?{([^}]*, ?)*']
+    nnoremap <silent> <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+    " ultisnips
+    let g:UltiSnipsExpandTrigger="<C-J>"
+    let g:UltiSnipsListSnippets="<C-J><C-J>"
+    let g:UltiSnipsJumpForwardTrigger="<C-J>"
+    let g:UltiSnipsJumpBackwardTrigger="<C-K>"
+else
+    inoremap <expr><Tab> pumvisible() ? "\<C-N>" : "\<Tab>"
+    imap <C-J> <Plug>snipMateNextOrTrigger
+    smap <C-J> <Plug>snipMateNextOrTrigger
+    set complete-=i
+    "let g:acp_completeoptPreview = 1
+    let g:SuperTabRetainCompletionType=2
+    let g:acp_behaviorSnipmateLength=1
+endif
+"}}}
+
+    " Syntax, jump between errors by :lnext :lprev "{{{
+let g:syntastic_mode_map = { "mode": "passive",
+                           \ "active_filetypes": ['javascript', 'tcl' , 'markdown'],
+                           \ "passive_filetypes": ['sh', 'c' , 'cpp', 'python', 'tex'] }
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height = 5
+"let g:syntastic_auto_jump = 1
+let g:syntastic_aggregate_errors = 1
+if system("which root-config") != ""
+    let g:syntastic_cpp_compiler_options = substitute(system("root-config --incdir"),'\(^.*\)\n$','-Werror -I\1','')
+    let g:syntastic_c_compiler_options = substitute(system("root-config --incdir"),'\(^.*\)\n$','-Werror -I\1','')
+endif
+let g:syntastic_python_checkers = ['pylint', 'python']
+let g:syntastic_python_pylint_args = "-disable=C0301,C0103,R0914,R0903"
+    " MatchTagAlways + Rainbow
+let g:mta_filetypes = {'html' : 1, 'xhtml' : 1, 'xml' : 1}
+let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
+autocmd BufReadPost * RainbowParentheses
+    " gfm-syntax
+let g:markdown_fenced_languages = ['cpp', 'html', 'python', 'bash=sh']
+autocmd BufReadPost README.md setlocal filetype=ghmarkdown
+"}}}
+
+" OS specified settings, see ':h feature-list'
+if s:uname == "Darwin\n"
+else
+    set path+=/usr/include/root
+endif
+
+" Other functions/keymappings, rule: Start with 'My', <leader>
+let mapleader=","
+    " Rearrange annoying default key-bindings
+nnoremap    <F1>        <nop>
+nnoremap    0           ^
+nnoremap    n           nzz
+nnoremap    N           Nzz
+inoremap    jj          <ESC>
+inoremap    <C-W>       <ESC>diwi
+command     W           w
+command     Q           q
+command     Wq          wq
+    " Quick syntax check and compile, close QuickFix window
+nnoremap <F6> :TagbarToggle<CR>
+inoremap <F9> <ESC>:SyntasticCheck<CR>
+    " Expand/close folds by space
+nnoremap <Space> za
+    " move between buffers in a smarter way
+nnoremap gb :bn!<CR>
+nnoremap gB :bp!<CR>
+    " Easy-Commenter ,<C-B> back to home, <C-E> jump to end. "{{{
+let b:comment_leader = ''
+let b:comment_tailer = ''
+autocmd FileType vim        let b:comment_leader = '"'
+autocmd Filetype vimwiki    let b:comment_leader = '%%'
+autocmd FileType make       let b:comment_leader = '#'
+autocmd FileType sh         let b:comment_leader = '#'
+autocmd FileType python     let b:comment_leader = '#'
+autocmd FileType c,cpp      let b:comment_leader = '//'
+autocmd FileType java       let b:comment_leader = '//'
+autocmd FileType tex        let b:comment_leader = '%'
+autocmd Filetype html,xml   let b:comment_leader = '<!--'
+autocmd Filetype html,xml   let b:comment_tailer = '-->'
+autocmd Filetype markdown   let b:comment_leader = '<!--'
+autocmd Filetype markdown   let b:comment_tailer = '-->'
+autocmd FileType conf,fstab let b:comment_leader = '#'
+if !filereadable(g:vimenv.'/bundle/nerdcommenter/README.md')
+    noremap <silent> <leader>cc :<C-B>silent <C-E>s/^\(.*\)$/<C-R>=escape(b:comment_leader,'\/')<CR>\1<C-R>=escape(b:comment_tailer,'\/')<CR>/<CR>:nohls<CR>
+    noremap <silent> <leader>c<SPACE> :<C-B>silent <C-E>s/^\( *\)\([^ ].*\)$/\1<C-R>=escape(b:comment_leader,'\/')<CR>\2<C-R>=escape(b:comment_tailer,'\/')<CR>/<CR>:nohls<CR>
+    noremap <silent> <leader>cu :<C-B>silent <C-E>s/^\( *\)<C-R>=escape(b:comment_leader,'\/')<CR>\(.*\)<C-R>=escape(b:comment_tailer,'\/')<CR>$/\1\2/<CR>:nohls<CR>
+    xnoremap <silent> <leader>cq :<C-E><C-U>silent '>s/$/\r<C-R>=escape(b:comment_tailer,'\/')<CR>/ <bar> '<s/^/<C-R>=escape(b:comment_leader,'\/')<CR>\r/<CR>:nohls<CR>
+    xnoremap <silent> <leader>cQ :<C-E><C-U>silent '>s/<C-R>=escape(b:comment_tailer,'\/')<CR>\n// <bar> '<s/<C-R>=escape(b:comment_leader,'\/')<CR>\n//<CR>:nohls<CR>
+endif
+let g:NERDCustomDelimiters = {
+    \ 'c'   : { 'leftAlt': '/*','rightAlt': '*/', 'left': '//', 'right': '' },
+    \ 'cpp' : { 'leftAlt': '/*','rightAlt': '*/', 'left': '//', 'right': '' },
+    \ 'rst' : { 'leftAlt': ''  ,'rightAlt': ''  , 'left':'.. ', 'right': '' },
+\ }
+"}}}
+    " search in visual range
+function! MyRangeSearch(direction) "{{{
+  call inputsave()
+  let g:srchstr = input(a:direction)
+  call inputrestore()
+  if strlen(g:srchstr) > 0
+    let g:srchstr = g:srchstr.'\%>'.(line("'<")-1).'l'.'\%<'.(line("'>")+1).'l'
+  else
+    let g:srchstr = ''
+  endif
+ endfunction "}}}
+vnoremap <silent> / :<C-U>call MyRangeSearch('/')<CR>:if strlen(g:srchstr) > 0\|exec '/'.g:srchstr\|endif<CR>
+vnoremap <silent> ? :<C-U>call MyRangeSearch('?')<CR>:if strlen(g:srchstr) > 0\|exec '?'.g:srchstr\|endif<CR>
+    " Quick exit
+nnoremap <leader>ZZ :conf xa<CR>
+
+" List of registered cmd, functions, hotkyes. Consult :map and :imap
+" Mode index=[f:function, i:insert, n:normal, v:visual x:visual+select]
+" n     <F9>                            : n:make / i:SyntasticCheck
+" n     <Space>                         : n:FoldToggle
+

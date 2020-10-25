@@ -110,5 +110,5 @@ alias ptt2='ssh bbsu@ptt2.cc'
 export PATH=$(echo -n ${PATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 export LIBPATH=$(echo -n ${LIBPATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 export SHLIB_PATH=$(echo -n ${SHLIB_PATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
-export PYTHONPATH=$(echo -n ${PYTHONPATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
+export PYTHONPATH=$(echo -n ${SYSTEM_PYTHON3_PATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')
 export MANPATH=$(echo -n ${MANPATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')

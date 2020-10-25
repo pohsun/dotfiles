@@ -1,0 +1,21 @@
+# Start message
+startup_message off
+
+# Set hardstatus always on
+hardstatus alwayslastline " %-Lw%{= Bw}%n%f %t%{-}%+Lw %=| %M %d %0c:%s "
+
+# Set 256 colors
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+
+# Set default encoding using 
+defencoding UTF-8
+
+# Refresh the display when exiting programs
+altscreen on
+
+# Disable vbell
+vbell off
+
+# SSH_AUTH_SOCK handling
+unsetenv SSH_AUTH_SOCK
+setenv SSH_AUTH_SOCK $HOME/.ssh/ssh-auth-sock.$HOSTNAME

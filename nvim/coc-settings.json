@@ -23,83 +23,21 @@
         "<C-w>": "command:wincmd k"
     },
 
+    "python.pythonPath": "python3",
     "python.jediEnabled": false,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "yapf",
     "languageserver": {
         "clangd": {
             "command": "/usr/local/opt/llvm/bin/clangd",
             "filetypes": ["c", "cpp", "objc", "objcpp"],
-            "args": ["--background-index"],
+            "args": ["--background-index", "--pretty"],
             "rootPatterns": [
                 "compile_flags.txt",
                 "compile_commands.json",
                 ".git/"
-            ]
-        },
-        "python": {
-            "command": "python",
-            "filetypes": ["python"],
-            "args": [
-                "-mpyls",
-                "-vv",
-                "--log-file",
-                "/tmp/lsp_python.log"
             ],
-            "trace.server": "verbose",
-            "settings": {
-                "pyls": {
-                    "enable": true,
-                    "trace": {
-                        "server": "verbose"
-                    },
-                    "commandPath": "",
-                    "configurationSources": [
-                        "pycodestyle"
-                    ],
-                    "plugins": {
-                        "jedi_completion": {
-                            "enabled": true
-                        },
-                        "jedi_hover": {
-                            "enabled": true
-                        },
-                        "jedi_references": {
-                            "enabled": true
-                        },
-                        "jedi_signature_help": {
-                            "enabled": true
-                        },
-                        "jedi_symbols": {
-                            "enabled": true,
-                            "all_scopes": true
-                        },
-                        "mccabe": {
-                            "enabled": true,
-                            "threshold": 15
-                        },
-                        "preload": {
-                            "enabled": true
-                        },
-                        "pycodestyle": {
-                            "enabled": true,
-                            "ignore": ["C0103", "E501"]
-                        },
-                        "pydocstyle": {
-                            "enabled": false,
-                            "match": "(?!test_).*\\.py",
-                            "matchDir": "[^\\.].*"
-                        },
-                        "pyflakes": {
-                            "enabled": true
-                        },
-                        "rope_completion": {
-                            "enabled": true
-                        },
-                        "yapf": {
-                            "enabled": true
-                        }
-                    }
-                }
-            }
+            "reference": "https://clangd.llvm.org"
         },
         "latex": {
             "command": "texlab",

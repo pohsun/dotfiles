@@ -41,6 +41,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'godlygeek/tabular', {'on': 'Tabular'}
 " Plug 'junegunn/vim-easy-align'
 Plug 'triglav/vim-visual-increment'
+"Plug 'mg979/vim-visual-multi'
+"Plug 'jiangmiao/auto-pairs'
 
 "  " Enhance searching through tags, buffer, files, file context, ets..
 "  " Most functions integrated to CoCList
@@ -49,13 +51,13 @@ Plug 'haya14busa/incsearch-fuzzy.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'liuchengxu/vista.vim' " Enhanced tagbar
 
-  " In-buffer movement
+  " In-buffer movement/selection
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'ripxorip/aerojump.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'kshenoy/vim-signature' " Enhanced markers
 Plug 'gcmt/wildfire.vim' " Quick selection of quoted region
-Plug 'matze/vim-move' " Maic move in Visual modes
+Plug 'matze/vim-move' " Magic move in Visual modes with <A-hjkl>
 
 "  " DevTools
 let g:coc_node_path = $HOME.'/local/usr/bin/node'
@@ -69,9 +71,11 @@ Plug 'honza/vim-snippets'
 "Plug 'w0rp/ale' " Linter, works fine with CoC
 
 "  " ft-extensions, specify install path to 'syntax' for syntax only.
+" Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
 Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
 Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
+Plug 'szymonmaszke/vimpyter'
 "Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
 "Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
 "Plug 'othree/html5.vim', {'dir': g:vimenv.'/syntax/html5.vim'}
@@ -82,7 +86,6 @@ if s:hostname == "localhost\n" || s:uname == "Darwin\n"
   Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
   Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()} }
   Plug 'aklt/plantuml-syntax', {'dir': g:vimenv.'/syntax/plantuml-syntax'}
-  Plug 'goerz/jupytext.vim', {'for': ['ipynb']}
   Plug 'xuhdev/vim-latex-live-preview', {'for': ['tex']}
 "  Plug 'tpope/vim-surround', {'for': ['html', 'xhtml', 'xml']}
 "  "Plug 'chusiang/vim-sdcv'
@@ -92,8 +95,8 @@ filetype plugin indent on
 
 " Vim settings
 let g:LargeFile = 20
-let g:python_host_prog='python'
-let g:python3_host_prog='python3'
+let g:python_host_prog=$HOME.'/.pyenv/shims/python2'
+let g:python3_host_prog=$HOME.'/.pyenv/shims/python3'
 let g:node_host_prog='/usr/local/bin/neovim-node-host'
 set modeline
 set modelines=5                     " OSX set default value to 0
@@ -207,10 +210,10 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "i`", "ip"] " wild
 " let g:surround_insert_tail = "<++>"
 call s:MyRCLoader("markdown-preview.vim")
 call s:MyRCLoader("latexPreview.vim")
-" 
+"
 " " OS specified settings, see ':h feature-list'
-" if s:uname == "Darwin\n"
-" endif
+"if s:uname == "Darwin\n"
+"endif
 
 " Other functions/keymappings, rule: Start with 'My', <leader>
     " Rearrange annoying default key-bindings
