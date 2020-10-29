@@ -31,6 +31,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox', {'dir': g:vimenv.'/colors/gruvbox'}
 " Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
+Plug 'psliwka/vim-smoothie'
 Plug 'Yggdroot/indentLine'
 Plug 'szw/vim-maximizer' " This may be useful if there's no tmux
 "Plug 'andymass/vim-matchup' " Takes too much time at startup, try deferred highlighting?
