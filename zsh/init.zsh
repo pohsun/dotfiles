@@ -3,7 +3,6 @@
 
 export lxHome="${HOME}/lxHome"
 export EDITOR="vim"
-export NoteLib="${HOME}/MWeb"
 
 ###### Setting for local machines
 if [ `uname -s` = "Linux" ]; then
@@ -20,7 +19,8 @@ elif [ `uname -s` = "Darwin" ]; then
 
     # Homebrew
     # If /usr/local/bin not in /etc/paths
-    # export PATH="${PATH}:/usr/local/bin"
+     export PATH="${PATH}:/usr/local/bin"
+     export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/opt"
 
     ### C and CPP environment
     #export C_INCLUDE_PATH=""
@@ -59,52 +59,12 @@ alias root='root -l'
 alias groot='g++ `root-config --cflags --glibs` -lRooFit -lRooFitCore'
 
 ###### Variables and alias
-lxplus() {
-    nodeId=$1
-    case ${nodeId} in
-        ("tmux")
-            ssh -YC $(tail -n 1 ~/lxplus.log) -t '/afs/cern.ch/user/p/pchen/local/usr/bin/tmux -CC a'
-        ;;
-        ("random")
-            ssh -YC ${USER}@lxplus.cern.ch
-        ;;
-        ("el6")
-            ssh -YC ${USER}@lxplus6.cern.ch
-        ;;
-        ("pyu")
-            ssh -YC pyu@lxplus.cern.ch
-        ;;
-        (*)
-            ssh -YC ${USER}@lxplus${nodeId}.cern.ch
-        ;;
-    esac
-}
-
-_lxplus() {
-    # For more example: https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org
-
-    #compadd tmux pyu random el6
-    _describe 'command' "('tmux: Attach a tmux session.', 'random: A random machine', 'el6: A random SLC6 machine')"
-}
-
-compdef _lxplus lxplus
-
-ntugrid5() {
-    user=$1
-    if [[ ${user} = 'pyu' ]]; then
-        ssh -YC pyu@140.112.104.121
-    else
-        ssh -YC pchen@140.112.104.121
-    fi
-}
-alias hep1='ssh -YC phchen@hep1.phys.ntu.edu.tw'
 
 ###### zsh-completions
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 ###### Some useful command
 alias weather='curl http://v2.wttr.in/'
-alias ptt2='ssh bbsu@ptt2.cc'
 
 ###### remove duplicated path
 export PATH=$(echo -n ${PATH} | awk -v RS=: '!($0 in a) {a[$0]; printf("%s%s", length(a) > 1 ? ":" : "", $0)}')

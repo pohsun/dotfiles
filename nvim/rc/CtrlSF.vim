@@ -1,4 +1,4 @@
-if filereadable(g:vimenv.'/bundle/ctrlsf.vim/README.md')
+if isdirectory(g:vimenv.'/bundle/ctrlsf.vim')
     let g:ctrlsf_ackprg = 'rg'
     let g:ctrlsf_regex_pattern = 1
     let g:ctrlsf_winsize = '30%'

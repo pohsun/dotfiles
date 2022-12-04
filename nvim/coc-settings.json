@@ -22,11 +22,10 @@
         "<C-s>": "action:split",
         "<C-w>": "command:wincmd k"
     },
-
+    
     "python.pythonPath": "python3",
-    "python.jediEnabled": false,
-    "python.linting.enabled": true,
-    "python.formatting.provider": "yapf",
+
+    // Since nvim 0.7, you could use nvim builtin LSP.
     "languageserver": {
         "clangd": {
             "command": "/usr/local/opt/llvm/bin/clangd",

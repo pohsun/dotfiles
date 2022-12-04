@@ -1,2 +1,2 @@
-if filereadable(g:vimenv.'/bundle/aerojump.nvim/README.md')
+if isdirectory(g:vimenv.'/bundle/aerojump.nvim')
 endif

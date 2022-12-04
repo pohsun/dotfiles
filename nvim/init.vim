@@ -26,11 +26,11 @@ Plug 'liuchengxu/vim-which-key'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'simnalamburt/vim-mundo' " Visualize undo tree
 
-  " The lookings, get powerline-fonts from yum/apt.
+  " The lookings, you sholuld get powerline-fonts by yourself.
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'morhetz/gruvbox', {'dir': g:vimenv.'/colors/gruvbox'}
-" Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
+"Plug 'nanotech/jellybeans.vim', {'dir': g:vimenv.'/colors/jellybeans.vim'}
 Plug 'psliwka/vim-smoothie'
 Plug 'Yggdroot/indentLine'
 Plug 'szw/vim-maximizer' " This may be useful if there's no tmux
@@ -61,8 +61,8 @@ Plug 'gcmt/wildfire.vim' " Quick selection of quoted region
 Plug 'matze/vim-move' " Magic move in Visual modes with <A-hjkl>
 
 "  " DevTools
-let g:coc_node_path = $HOME.'/local/usr/bin/node'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'branch': 'release'} " Also replaces fzf with CocList
+let g:coc_node_path = '/usr/local/bin/node'
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Also replaces fzf with CocList
 Plug 'honza/vim-snippets'
 "if filereadable($HOME.'/local/LanguageTool/languagetool-commandline.jar')
 "  let g:languagetool_jar='$HOME/local/LanguageTool/languagetool-commandline.jar'
@@ -72,24 +72,25 @@ Plug 'honza/vim-snippets'
 "Plug 'w0rp/ale' " Linter, works fine with CoC
 
 "  " ft-extensions, specify install path to 'syntax' for syntax only.
-" Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
 Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
-Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
-Plug 'szymonmaszke/vimpyter'
-"Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
+Plug 'dccsillag/magma-nvim'  " Run jupyter within nvim
+"Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
 "Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
+"Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
 "Plug 'othree/html5.vim', {'dir': g:vimenv.'/syntax/html5.vim'}
 "Plug 'ap/vim-css-color'
 "Plug 'StanAngeloff/php.vim', {'dir': g:vimenv.'/syntax/php.vim'}
 if s:hostname == "localhost\n" || s:uname == "Darwin\n"
   Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
   Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+  Plug 'reedes/vim-pencil'
   Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install()} }
   Plug 'aklt/plantuml-syntax', {'dir': g:vimenv.'/syntax/plantuml-syntax'}
-  Plug 'xuhdev/vim-latex-live-preview', {'for': ['tex']}
-"  Plug 'tpope/vim-surround', {'for': ['html', 'xhtml', 'xml']}
-"  "Plug 'chusiang/vim-sdcv'
+  "Plug 'xuhdev/vim-latex-live-preview', {'for': ['tex']}
+  "Plug 'tpope/vim-surround', {'for': ['html', 'xhtml', 'xml']}
+  "Plug 'chusiang/vim-sdcv'
 endif
 call plug#end()
 filetype plugin indent on
@@ -118,7 +119,7 @@ set wildignore+=*.o,*.a,*.so,*.obj,*.exe,*.lib
 set wildignore+=*.pyc
 set wildignore+=*.png,*.jpg,*.gif,*.pdf
 "set wildignore+=*.root
-set completeopt=menuone,longest
+set completeopt=menuone,longest,noinsert
 set complete=.,b,t,i,k " see :h cpt
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
@@ -159,6 +160,7 @@ set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set scrolloff=15
+set virtualedit=block
 set expandtab                       " replace all tab with space
 set list
 set listchars=tab:\|\-,conceal:+,trail:-
@@ -210,19 +212,19 @@ let g:mta_filetypes = {'html' : 1, 'xhtml' : 1, 'xml' : 1} " MatchTagAlways
 let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "i`", "ip"] " wildfire
 " let g:surround_insert_tail = "<++>"
 call s:MyRCLoader("markdown-preview.vim")
-call s:MyRCLoader("latexPreview.vim")
-"
-" " OS specified settings, see ':h feature-list'
+"call s:MyRCLoader("latexPreview.vim")
+
+" OS specified settings, see ':h feature-list'
 "if s:uname == "Darwin\n"
 "endif
 
-" Other functions/keymappings, rule: Start with 'My', <leader>
-    " Rearrange annoying default key-bindings
+" Basic key-bindings
 nnoremap <F1>  <nop>
 nnoremap 0     ^
 inoremap jj    <ESC>
 inoremap <C-w> <C-[>diwi
 nnoremap dw    diw
+nnoremap <nowait><silent> <ESC><ESC> :noh<CR>
 command! W     w
 command! Q     q
 command! Wq    wq
@@ -230,6 +232,7 @@ inoremap <expr> <CR>    pumvisible() ? "\<C-Y>" : "\<CR>"
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
+" Other functions, rule: Start with 'My', <leader>
     " templates, headers, and timestamps
 function! MyAutoTemplate(fsize) "{{{
     if a:fsize <= 0 && filereadable(g:lxHome.'templates/tpl.'.&ft)

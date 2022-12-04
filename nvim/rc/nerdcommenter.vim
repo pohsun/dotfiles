@@ -13,7 +13,7 @@ autocmd Filetype html,xml   let b:comment_tailer = '-->'
 autocmd Filetype markdown   let b:comment_leader = '<!--'
 autocmd Filetype markdown   let b:comment_tailer = '-->'
 autocmd FileType conf,fstab let b:comment_leader = '#'
-if !filereadable(g:vimenv.'/bundle/nerdcommenter/README.md')
+if !isdirectory(g:vimenv.'/bundle/nerdcommenter')
     noremap <silent> <leader>cc :<C-B>silent <C-E>s/^\(.*\)$/<C-R>=escape(b:comment_leader,'\/')<CR>\1<C-R>=escape(b:comment_tailer,'\/')<CR>/<CR>:nohls<CR>
     noremap <silent> <leader>c<SPACE> :<C-B>silent <C-E>s/^\( *\)\([^ ].*\)$/\1<C-R>=escape(b:comment_leader,'\/')<CR>\2<C-R>=escape(b:comment_tailer,'\/')<CR>/<CR>:nohls<CR>
     noremap <silent> <leader>cu :<C-B>silent <C-E>s/^\( *\)<C-R>=escape(b:comment_leader,'\/')<CR>\(.*\)<C-R>=escape(b:comment_tailer,'\/')<CR>$/\1\2/<CR>:nohls<CR>

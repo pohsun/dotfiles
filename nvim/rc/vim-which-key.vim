@@ -9,7 +9,7 @@ let which_key_map = {
     \ 't' : {
         \ 'name': '+Toggle',
         \ 'p': [':set rnu! nu! list! paste!| IndentLinesToggle"', "Copy/Paste"],
-        \ 'w': [':set wrap!', "LnWrap"],
+        \ 'w': [':TogglePencil', "Pencil"],
         \ 'U': [':MundoToggle', "Undo tree"],
         \ '5': [':CocCommand explorer', "File Explorer"],
         \ '6': [':Vista coc', "Tagbar"],

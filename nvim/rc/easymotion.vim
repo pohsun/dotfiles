@@ -1,4 +1,4 @@
-if v:version >= 703 && filereadable(g:vimenv.'/bundle/vim-easymotion/README.md')
+if v:version >= 703 && isdirectory(g:vimenv.'/bundle/vim-easymotion')
     let g:EasyMotion_do_mapping = 0
     let g:EasyMotion_smartcase= 1
     let g:EasyMotion_inc_highlight = 1

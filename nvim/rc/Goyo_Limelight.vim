@@ -1,4 +1,4 @@
-if filereadable(g:vimenv.'/bundle/goyo.vim/README.md')
+if isdirectory(g:vimenv.'/bundle/goyo.vim')
     let g:goyo_width = 84
     let g:goyo_height = 85
     let g:goyo_linenr = 2
