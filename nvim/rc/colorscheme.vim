@@ -1,13 +1,6 @@
 " let &colorcolumn="80,".join(range(160,999,80),",")  " highlight i-th column
 let &colorcolumn="80"
 
-autocmd Syntax * syntax keyword myTodo TODO DEBUG containedin=ALL
-autocmd Syntax * syntax keyword myNote NOTE REMARK INFO containedin=ALL
-autocmd Syntax * syntax keyword myWarn WARNING ERROR DANGER BUG containedin=ALL
-hi! link myTodo Todo
-hi! link myNote DiffChange
-hi! link myWarn Error
-
 hi Cursor cterm=inverse,bold
 if filereadable(g:vimenv.'/colors/gruvbox/colors/gruvbox.vim')
     colo gruvbox
@@ -29,6 +22,13 @@ elseif filereadable(g:vimenv.'/colors/jellybeans.vim/colors/jellybeans.vim')
 else
     colo default
 endif
+
+autocmd Syntax * syntax keyword myTodo TODO DEBUG XXX FIXME containedin=ALL contained 
+autocmd Syntax * syntax keyword myNote NOTE REMARK INFO containedin=ALL contained
+autocmd Syntax * syntax keyword myWarn WARNING ERROR DANGER BUG containedin=ALL contained
+hi! link myTodo Todo
+hi! link myNote DiffChange
+hi! link myWarn Error
 
     " Other highligh stuff
 function! MyCursorwordHighlight() abort "{{{

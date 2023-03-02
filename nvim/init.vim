@@ -24,7 +24,9 @@ Plug 'liuchengxu/vim-which-key'
 
   " Basic function enhancements
 Plug 'skywind3000/asyncrun.vim'
-Plug 'simnalamburt/vim-mundo' " Visualize undo tree
+Plug 'rcarriga/nvim-notify'
+Plug 'simnalamburt/vim-mundo'  " Visualize undo tree
+"Plug 'neovim/nvim-lspconfig'  " Official tutorial for the builtin LSP since nvim 0.7+
 
   " The lookings, you sholuld get powerline-fonts by yourself.
 Plug 'vim-airline/vim-airline'
@@ -75,7 +77,7 @@ Plug 'honza/vim-snippets'
 "Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'octol/vim-cpp-enhanced-highlight', {'dir': g:vimenv.'/syntax/vim-cpp-enhanced-highlight'}
 Plug 'Mizuchi/STL-Syntax', {'dir': g:vimenv.'syntax/STL-Syntax'}
-Plug 'dccsillag/magma-nvim'  " Run jupyter within nvim
+Plug 'dccsillag/magma-nvim', {'do': ':UpdateRemotePlugins', 'branch': 'main'}  " Run jupyter within nvim
 "Plug 'JuliaEditorSupport/julia-vim', {'dir': g:vimenv.'/syntax/julia-vim'}
 "Plug 'rust-lang/rust.vim', {'dir': g:vimenv.'/syntax/rust.vim'}
 "Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries' }
@@ -199,6 +201,7 @@ call s:MyRCLoader("vim-mundo.vim")
 call s:MyRCLoader("colorscheme.vim")
 call s:MyRCLoader("airline.vim")
 call s:MyRCLoader("indentLine.vim")
+call s:MyRCLoader("nvim-lspconfig.vim")             " Official LSP support
 call s:MyRCLoader("coc.vim")                        " Load after all schemes are on.
 call s:MyRCLoader("Goyo_Limelight.vim")             " Concentrate in writing
 call s:MyRCLoader("vim-maximizer.vim")              " <leader>wz to zoom
